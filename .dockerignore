@@ -1,0 +1,6 @@
+.git
+*.iml
+.idea
+build/gopath
+.gradle
+vendor
