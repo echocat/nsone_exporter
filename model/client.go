@@ -11,6 +11,7 @@ import (
 	"sync"
 	"time"
 	"github.com/prometheus/common/log"
+	"crypto/tls"
 )
 
 const apiRootUri = "https://api.nsone.net/v1"
@@ -32,6 +33,9 @@ func NewClient(accessToken string, timeout time.Duration, maximumNumberOfConcurr
 		condition:   &sync.Cond{L: &sync.Mutex{}},
 		client: &http.Client{
 			Transport: &http.Transport{
+				TLSClientConfig: &tls.Config{
+					RootCAs: utils.LoadInternalCaBunlde(),
+				},
 				Dial: func(netw, addr string) (net.Conn, error) {
 					c, err := net.DialTimeout(netw, addr, timeout)
 					if err != nil {

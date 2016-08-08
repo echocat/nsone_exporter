@@ -2,23 +2,12 @@ package main
 
 import (
 	"crypto/tls"
-	"crypto/x509"
 	"github.com/prometheus/client_golang/prometheus"
-	"io/ioutil"
 	"github.com/prometheus/common/log"
 	slog "log"
 	"net/http"
+	"github.com/echocat/nsone_exporter/utils"
 )
-
-func loadCertificatesFrom(pemFile string) (*x509.CertPool, error) {
-	caCert, err := ioutil.ReadFile(pemFile)
-	if err != nil {
-		return nil, err
-	}
-	certificates := x509.NewCertPool()
-	certificates.AppendCertsFromPEM(caCert)
-	return certificates, nil
-}
 
 type bufferedLogWriter struct {
 	buf []byte
@@ -50,7 +39,7 @@ func startServer(metricsPath, listenAddress, tlsCert, tlsPrivateKey, tlsClientCa
 	if len(tlsCert) > 0 {
 		clientValidation := "no"
 		if len(tlsClientCa) > 0 && len(tlsCert) > 0 {
-			certificates, err := loadCertificatesFrom(tlsClientCa)
+			certificates, err := utils.LoadCertificatesFrom(tlsClientCa)
 			if err != nil {
 				log.Fatalf("Couldn't load client CAs from %s. Got: %s", tlsClientCa, err)
 			}
