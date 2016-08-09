@@ -33,6 +33,7 @@ func NewClient(accessToken string, timeout time.Duration, maximumNumberOfConcurr
 		condition:   &sync.Cond{L: &sync.Mutex{}},
 		client: &http.Client{
 			Transport: &http.Transport{
+				MaxIdleConnsPerHost: 100,
 				TLSClientConfig: &tls.Config{
 					RootCAs: utils.LoadInternalCaBunlde(),
 				},
@@ -218,9 +219,14 @@ func (instance *Client) executeAndEvaluateUri(uri *url.URL, err error, target in
 }
 
 func (instance *Client) executeAndEvaluateRequest(request *http.Request, target interface{}) error {
-	instance.increaseUsageCount()
-	defer instance.decreaseUsageCount()
 	var response *http.Response
+	instance.increaseUsageCount()
+	defer func() {
+		instance.decreaseUsageCount()
+		if response != nil && response.Body != nil {
+			response.Body.Close()
+		}
+	}()
 	var err error
 	waitBeforeRetry := 0
 	for i := 0; (i == 0 || waitBeforeRetry > 0) && i < 20; i++ {
