@@ -10,7 +10,7 @@ Download your version from the [releases page](https://github.com/echocat/nsone_
 
 Example:
 ```bash
-sudo curl -SL https://github.com/echocat/nsone_exporter/releases/download/v0.1.1/nsone_exporter-linux-amd64 \
+sudo curl -SL https://github.com/echocat/nsone_exporter/releases/download/v0.1.2/nsone_exporter-linux-amd64 \
     > /usr/bin/nsone_exporter
 sudo chmod +x /usr/bin/nsone_exporter
 ```

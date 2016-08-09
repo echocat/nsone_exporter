@@ -5,7 +5,7 @@ plugins {
 
 final name = 'nsone_exporter'
 group 'github.com/echocat/nsone_exporter'
-version '0.1.1'
+version '0.1.2'
 
 dependencies {
     build 'github.com/prometheus/client_golang'
